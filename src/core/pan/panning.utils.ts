@@ -148,6 +148,23 @@ export function handleNewPosition(
   const { limitToBounds } = contextInstance.setup;
   const { wrapperComponent, bounds } = contextInstance;
   const { scale, positionX, positionY } = contextInstance.transformState;
+  if (contextInstance.props.getContrainedPosition) {
+    const { positionX, positionY } =
+      contextInstance.props.getContrainedPosition(
+        newPositionX,
+        newPositionY,
+        scale,
+      );
+    contextInstance.setTransformState(
+      Math.min(
+        Math.max(scale, contextInstance.props.minScale!),
+        contextInstance.props.maxScale!,
+      ),
+      positionX,
+      positionY,
+    );
+    return;
+  }
 
   if (
     wrapperComponent === null ||
