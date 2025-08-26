@@ -229,8 +229,11 @@ export class ZoomPanPinch {
     const isAllowed = isWheelAllowed(this, event);
     if (!isAllowed) return;
 
-    const keysPressed = this.isPressingKeys(this.setup.wheel.activationKeys);
-    if (!keysPressed) return;
+    // const keysPressed = this.isPressingKeys(this.setup.wheel.activationKeys);
+    // if (!keysPressed) return;
+
+    // zoom is only possible with ctrl key
+    if (!event.ctrlKey) return;
 
     handleWheelStart(this, event);
     handleWheelZoom(this, event);
@@ -247,7 +250,7 @@ export class ZoomPanPinch {
       !this.wrapperComponent ||
       !this.contentComponent ||
       disabled ||
-      !wheel.wheelDisabled ||
+      wheel.wheelDisabled ||
       panning.disabled ||
       !panning.wheelPanning ||
       event.ctrlKey
@@ -259,8 +262,9 @@ export class ZoomPanPinch {
     event.stopPropagation();
 
     const { positionX, positionY } = this.transformState;
-    const mouseX = positionX - event.deltaX;
-    const mouseY = positionY - event.deltaY;
+    const shiftPressed = event.shiftKey;
+    const mouseX = positionX - (shiftPressed ? event.deltaY : event.deltaX);
+    const mouseY = positionY - (shiftPressed ? event.deltaX : event.deltaY);
     const newPositionX = panning.lockAxisX ? positionX : mouseX;
     const newPositionY = panning.lockAxisY ? positionY : mouseY;
 
