@@ -166,6 +166,10 @@ type ReactZoomPanPinchProps = {
         activationKeys?: string[];
         excluded?: string[];
     };
+    getContrainedPosition?: (positionX: number, positionY: number, scale: number) => {
+        positionX: number;
+        positionY: number;
+    };
     panning?: {
         disabled?: boolean;
         velocityDisabled?: boolean;

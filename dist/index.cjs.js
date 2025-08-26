@@ -360,12 +360,17 @@ function handleNewPosition(contextInstance, newPositionX, newPositionY, paddingV
     var limitToBounds = contextInstance.setup.limitToBounds;
     var wrapperComponent = contextInstance.wrapperComponent, bounds = contextInstance.bounds;
     var _a = contextInstance.transformState, scale = _a.scale, positionX = _a.positionX, positionY = _a.positionY;
+    if (contextInstance.props.getContrainedPosition) {
+        var _b = contextInstance.props.getContrainedPosition(newPositionX, newPositionY, scale), positionX_1 = _b.positionX, positionY_1 = _b.positionY;
+        contextInstance.setTransformState(Math.min(Math.max(scale, contextInstance.props.minScale), contextInstance.props.maxScale), positionX_1, positionY_1);
+        return;
+    }
     if (wrapperComponent === null ||
         bounds === null ||
         (newPositionX === positionX && newPositionY === positionY)) {
         return;
     }
-    var _b = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent), x = _b.x, y = _b.y;
+    var _c = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent), x = _c.x, y = _c.y;
     contextInstance.setTransformState(scale, x, y);
 }
 var getPanningClientPosition = function (contextInstance, clientX, clientY) {
@@ -1496,8 +1501,10 @@ var ZoomPanPinch = /** @class */ (function () {
             var isAllowed = isWheelAllowed(_this, event);
             if (!isAllowed)
                 return;
-            var keysPressed = _this.isPressingKeys(_this.setup.wheel.activationKeys);
-            if (!keysPressed)
+            // const keysPressed = this.isPressingKeys(this.setup.wheel.activationKeys);
+            // if (!keysPressed) return;
+            // zoom is only possible with ctrl key
+            if (!event.ctrlKey)
                 return;
             handleWheelStart(_this, event);
             handleWheelZoom(_this, event);
@@ -1511,7 +1518,7 @@ var ZoomPanPinch = /** @class */ (function () {
             if (!_this.wrapperComponent ||
                 !_this.contentComponent ||
                 disabled ||
-                !wheel.wheelDisabled ||
+                wheel.wheelDisabled ||
                 panning.disabled ||
                 !panning.wheelPanning ||
                 event.ctrlKey) {
@@ -1520,8 +1527,9 @@ var ZoomPanPinch = /** @class */ (function () {
             event.preventDefault();
             event.stopPropagation();
             var _b = _this.transformState, positionX = _b.positionX, positionY = _b.positionY;
-            var mouseX = positionX - event.deltaX;
-            var mouseY = positionY - event.deltaY;
+            var shiftPressed = event.shiftKey;
+            var mouseX = positionX - (shiftPressed ? event.deltaY : event.deltaX);
+            var mouseY = positionY - (shiftPressed ? event.deltaX : event.deltaY);
             var newPositionX = panning.lockAxisX ? positionX : mouseX;
             var newPositionY = panning.lockAxisY ? positionY : mouseY;
             var _c = _this.setup.alignmentAnimation, sizeX = _c.sizeX, sizeY = _c.sizeY;
