@@ -19,7 +19,7 @@
     "lint": "eslint . --ext .js,.jsx,.tsx,.ts --fix",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "prepare": "install-peers && npm build",
+    "prepare": "install-peers && npm run build",
     "predeploy": "npm run build:docs",
     "deploy": "gh-pages -d storybook-static",
     "release": "npm semantic-release"
