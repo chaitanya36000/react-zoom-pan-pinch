@@ -125,7 +125,11 @@ export class ZoomPanPinch {
     const passive = makePassiveEventOption();
     const currentDocument = this.wrapperComponent?.ownerDocument;
     const currentWindow = currentDocument?.defaultView;
-    window.addEventListener("wheel", this.onWheelPanning, passive);
+    this.wrapperComponent?.addEventListener(
+      "wheel",
+      this.onWheelPanning,
+      passive,
+    );
     // Panning on window to allow panning when mouse is out of component wrapper
     currentWindow?.addEventListener("mousedown", this.onPanningStart, passive);
     currentWindow?.addEventListener("mousemove", this.onPanning, passive);
@@ -163,7 +167,7 @@ export class ZoomPanPinch {
     // Zooming events on wrapper
     const passive = makePassiveEventOption();
 
-    window.addEventListener("wheel", this.onWheelZoom, passive);
+    wrapper.addEventListener("wheel", this.onWheelZoom, passive);
     wrapper.addEventListener("dblclick", this.onDoubleClick, passive);
     wrapper.addEventListener("touchstart", this.onTouchPanningStart, passive);
     wrapper.addEventListener("touchmove", this.onTouchPanning, passive);

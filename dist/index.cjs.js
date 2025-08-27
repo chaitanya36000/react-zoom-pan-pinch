@@ -1416,11 +1416,11 @@ var ZoomPanPinch = /** @class */ (function () {
             _this.setup = createSetup(newProps);
         };
         this.initializeWindowEvents = function () {
-            var _a;
+            var _a, _b;
             var passive = makePassiveEventOption();
             var currentDocument = (_a = _this.wrapperComponent) === null || _a === void 0 ? void 0 : _a.ownerDocument;
             var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
-            window.addEventListener("wheel", _this.onWheelPanning, passive);
+            (_b = _this.wrapperComponent) === null || _b === void 0 ? void 0 : _b.addEventListener("wheel", _this.onWheelPanning, passive);
             // Panning on window to allow panning when mouse is out of component wrapper
             currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousedown", _this.onPanningStart, passive);
             currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousemove", _this.onPanning, passive);
@@ -1447,7 +1447,7 @@ var ZoomPanPinch = /** @class */ (function () {
         this.handleInitializeWrapperEvents = function (wrapper) {
             // Zooming events on wrapper
             var passive = makePassiveEventOption();
-            window.addEventListener("wheel", _this.onWheelZoom, passive);
+            wrapper.addEventListener("wheel", _this.onWheelZoom, passive);
             wrapper.addEventListener("dblclick", _this.onDoubleClick, passive);
             wrapper.addEventListener("touchstart", _this.onTouchPanningStart, passive);
             wrapper.addEventListener("touchmove", _this.onTouchPanning, passive);
